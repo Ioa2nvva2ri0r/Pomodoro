@@ -1,0 +1,92 @@
+@import '../../mixin.scss';
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 0px 10px 63px hsla(0, 0%, 0%, 0.07);
+  @include transition(background-color);
+}
+
+.nav,
+.nav__box,
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.nav {
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1440px;
+  min-height: 70px;
+  margin: 0 auto;
+  padding: 0 80px;
+  &__box {
+    padding-left: 30px;
+  }
+}
+
+.logo,
+.statistics {
+  text-decoration: none;
+  color: #dc3e22;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 24px;
+  & svg {
+    margin-right: 13px;
+  }
+}
+
+.statistics {
+  margin-right: 20px;
+  @include transition(color);
+  & svg {
+    margin-right: 9px;
+    & path {
+      @include transition(fill);
+    }
+  }
+  &:hover,
+  &:focus,
+  &:active {
+    color: #b7280f;
+    & svg path {
+      fill: #b7280f;
+    }
+  }
+}
+
+.setting {
+  &__btn {
+    &-open {
+      display: flex;
+      align-items: center;
+      border: none;
+      padding: 0;
+      background-color: transparent;
+      color: inherit;
+      @include transition(opacity);
+      & svg {
+        margin-right: 7px;
+        & > path {
+          @include transition(fill);
+        }
+      }
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+  &__modal-content {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    max-width: 380px;
+  }
+}

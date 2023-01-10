@@ -1,0 +1,20 @@
+@import '../../../../mixin.scss';
+
+.list {
+  @include reset(li);
+  counter-reset: ol-list;
+  width: 100%;
+  max-width: 370px;
+  padding-bottom: 20px;
+}
+
+.time {
+  display: block;
+  font-weight: 300;
+  color: #999999;
+  @include transition(opacity, 1);
+  @include visibility(visible);
+  &__hidden {
+    opacity: 0;
+  }
+}

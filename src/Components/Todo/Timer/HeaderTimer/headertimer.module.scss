@@ -1,0 +1,21 @@
+@import '../../../../mixin.scss';
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px 18px 40px;
+  @include transition(background-color);
+  @include visible-translate-Y(-100px);
+  & > * {
+    color: #fff;
+  }
+}
+
+.todo {
+  @include reset(nowrap);
+  width: 100%;
+  max-width: 500px;
+  font-weight: 700;
+  margin: 0 15px 0 0;
+}

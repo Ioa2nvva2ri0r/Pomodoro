@@ -1,0 +1,61 @@
+@import '../../../mixin.scss';
+
+.container {
+  overflow: hidden;
+  height: 505px;
+  @include transition(background-color);
+  &__main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 74px 0 106px 0;
+    @include visible-translate-Y(300px);
+  }
+}
+
+.message {
+  text-align: center;
+  margin: 0;
+  height: 100%;
+  padding: 218px 40px;
+  font-size: 34px;
+  font-weight: 300;
+  line-height: 100%;
+  @include modal(open);
+  & svg {
+    display: inline-block;
+    @include block-size(34px, 34px);
+    margin-bottom: -5px;
+  }
+}
+
+.box {
+  &__main {
+    position: relative;
+  }
+}
+
+.btn {
+  &__add {
+    @include reset(btn);
+    position: absolute;
+    @include block-size(50px, 50px);
+    top: 52%;
+    right: -75px;
+    transform: translateY(-50%);
+    & svg circle {
+      @include transition(fill);
+    }
+    &:hover,
+    &:focus,
+    &:active {
+      & svg circle {
+        fill: #899441;
+      }
+    }
+  }
+  &__run {
+    margin-right: 25px;
+  }
+}

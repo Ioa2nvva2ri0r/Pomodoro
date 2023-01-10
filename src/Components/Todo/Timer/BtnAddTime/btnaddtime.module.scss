@@ -1,0 +1,63 @@
+@import '../../../../mixin.scss';
+
+.main {
+  @include reset(btn);
+  @include block-size(inherit, inherit);
+  & svg circle {
+    @include transition(fill);
+  }
+  &:hover,
+  &:focus,
+  &:active {
+    & svg circle {
+      fill: #899441;
+    }
+  }
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+    & svg {
+      fill: inherit;
+      & circle {
+        fill: inherit;
+      }
+    }
+    &:hover {
+      & + .main__desc {
+        opacity: 1;
+      }
+    }
+  }
+  &__box {
+    position: absolute;
+    top: 52%;
+    right: -75px;
+    @include block-size(50px, 50px);
+    transform: translateY(-50%);
+  }
+  &__desc {
+    display: block;
+    position: absolute;
+    text-align: center;
+    top: 60px;
+    left: 50%;
+    z-index: 10;
+    width: 120px;
+    margin: 0;
+    border-radius: 3px;
+    padding: 5px;
+    font-size: 10px;
+    line-height: 100%;
+    transform: translateX(-50%);
+    @include transition(opacity, 0);
+    &::after {
+      position: absolute;
+      content: '';
+      top: -4px;
+      left: 50%;
+      @include block-size(8px, 8px);
+      background-color: inherit;
+      transform: translateX(-50%) rotate(45deg);
+    }
+  }
+}

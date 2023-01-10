@@ -1,0 +1,94 @@
+@import './mixin.scss';
+@import './fonst.scss';
+
+* {
+  box-sizing: border-box;
+  font-family: 'SF UI Display', 'Roboto', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 17px;
+}
+
+body {
+  user-select: none;
+  position: relative;
+  min-width: 320px;
+  min-height: 1000px;
+  margin: 0 auto;
+  color: hsl(0, 0%, 20%);
+  @include transitions((background-color, color));
+}
+
+#root {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+input,
+button,
+a {
+  &:focus {
+    outline: none;
+  }
+}
+
+input,
+button {
+  cursor: pointer;
+}
+
+.us-btn {
+  display: inline-block;
+  border: 2px solid;
+  height: 55px;
+  padding: 0 50px;
+  font-weight: 500;
+  @include transitions((border-color, color, background-color));
+  &__run {
+    border-color: #a8b64f;
+    color: #fff;
+    background-color: #a8b64f;
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: #899441;
+      background-color: #899441;
+    }
+  }
+  &__reset {
+    border-color: #dc3e22;
+    background-color: transparent;
+    color: #dc3e22;
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: #dc3e22;
+      color: #fff;
+    }
+  }
+  &:disabled {
+    cursor: default;
+    border-color: #c4c4c4;
+    background-color: transparent;
+    color: #c4c4c4;
+  }
+}
+
+.error {
+  overflow: hidden;
+  text-align: center;
+  width: 100%;
+  max-height: 0;
+  margin: 0;
+  font-weight: 600;
+  line-height: 100%;
+  color: red;
+  transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+  &-active {
+    max-height: 1000px;
+    transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
+  }
+}

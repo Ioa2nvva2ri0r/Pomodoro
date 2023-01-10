@@ -1,0 +1,39 @@
+@import '../../../../mixin.scss';
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(405px, 1fr));
+  gap: 32px;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px 35px 25px 25px;
+  @include transition(background-color);
+  & svg > path {
+    @include transition(stroke);
+  }
+  &:not(:last-child) {
+    & .title {
+      margin: 0 0 20px 0;
+    }
+    & .data {
+      font-size: 64px;
+      line-height: 76px;
+    }
+  }
+}
+
+.title {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 33px;
+}
+
+.data {
+  font-size: 72px;
+  line-height: 86px;
+}

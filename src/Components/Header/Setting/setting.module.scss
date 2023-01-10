@@ -1,0 +1,101 @@
+@import '../../../mixin.scss';
+
+.container {
+  width: 100%;
+  padding-top: 15px;
+}
+
+.title {
+  text-decoration: underline;
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.form {
+  width: 100%;
+  &__boxBtn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__btn {
+    height: 40px !important;
+    padding: 0 25px !important;
+  }
+}
+
+.label {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  &__box {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    margin-right: 10px;
+    & > * {
+      line-height: 100%;
+    }
+  }
+  &__desc {
+    font-size: 12px;
+    font-weight: 600;
+  }
+  &__note {
+    font-size: 10px;
+  }
+}
+
+.input {
+  &:not([type='checkbox']) {
+    @include block-size(50px, 20px);
+    border: 1px solid transparent;
+    @include transitions((border-color, background-color));
+    &,
+    &::placeholder {
+      font-weight: 300;
+      color: #999999;
+    }
+    &::placeholder {
+      @include transition(color);
+    }
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: #a8b64f;
+      &::placeholder {
+        color: #a8b64f;
+      }
+    }
+  }
+  &[type='checkbox'] {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+    margin: 0;
+    @include block-size(20px, 20px);
+    &:checked + .input__checkbox > svg {
+      opacity: 1;
+    }
+  }
+  &__checkbox {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    @include block-size(20px, 20px);
+    @include transition(background-color);
+    & svg {
+      @include block-size(17px, 17px);
+      @include transition(opacity, 0);
+      & > path {
+        @include transition(fill);
+      }
+    }
+  }
+}

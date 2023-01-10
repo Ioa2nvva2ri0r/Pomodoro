@@ -1,0 +1,45 @@
+@import '../../../../mixin.scss';
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 175px;
+  max-width: 370px;
+  padding-bottom: 24px;
+  &__label {
+    overflow: hidden;
+    height: 0;
+    font-size: 0;
+  }
+  &__input {
+    @include block-size(100%, 55px);
+    margin-bottom: 12px;
+    border: 1px solid transparent;
+    padding: 0 12px;
+    @include transitions((border-color, background-color));
+    &,
+    &::placeholder {
+      font-weight: 300;
+      color: #999999;
+    }
+    &::placeholder {
+      @include transition(color);
+    }
+    &[aria-invalid='true'] {
+      border-color: red;
+    }
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: #a8b64f;
+      &::placeholder {
+        color: #a8b64f;
+      }
+    }
+  }
+  &__btn {
+    margin-top: 11px;
+  }
+}

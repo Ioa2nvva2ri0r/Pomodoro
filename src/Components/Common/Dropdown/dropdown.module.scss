@@ -1,0 +1,20 @@
+@import '../../../mixin.scss';
+
+.container {
+  padding-left: 15px;
+}
+
+.dropdown {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  @include block-size(100%, 100%);
+  @include visibility(visible);
+  &__container {
+    position: relative;
+  }
+  &__close {
+    @include visibility(hidden);
+  }
+}

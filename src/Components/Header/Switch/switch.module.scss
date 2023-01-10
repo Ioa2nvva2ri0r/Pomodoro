@@ -1,0 +1,63 @@
+@import '../../../mixin.scss';
+
+.switch {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  left: 4px;
+  @include block-size(22px, 22px);
+  border-radius: 50%;
+  @include transition(transform, translate(0, -50%));
+  & svg {
+    @include block-size(18px, 18px);
+    & > path {
+      @include transition(fill);
+    }
+  }
+  &__container {
+    width: 100%;
+    padding-top: 15px;
+  }
+  &__title {
+    text-decoration: underline;
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  &__box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  &__label {
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 12px;
+    font-weight: 600;
+    @include modal-X(visible, 250px);
+    &-hidden {
+      @include modal-X(hidden, 250px);
+    }
+  }
+  &__input {
+    position: absolute;
+    @include block-size(100%, 100%);
+    opacity: 0;
+    margin: 0;
+    border-radius: 15px;
+    z-index: 5;
+    &:checked + .switch {
+      transform: translate(20px, -50%);
+    }
+  }
+  &__slider {
+    position: relative;
+    cursor: pointer;
+    @include block-size(50px, 26px);
+    border-radius: 15px;
+    @include transition(background-color);
+  }
+}

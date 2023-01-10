@@ -1,0 +1,21 @@
+@import '../../../../mixin.scss';
+
+.main {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  &,
+  & > * {
+    font-size: 150px;
+    font-weight: 200;
+    line-height: 168px;
+    @include transition(color);
+  }
+  & > * {
+    color: inherit;
+  }
+  &__colon {
+    line-height: 50%;
+    padding-bottom: 40px;
+  }
+}
