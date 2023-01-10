@@ -8,6 +8,18 @@
   padding-bottom: 32px;
 }
 
+.box__pomodoro,
+.pomodoro__count {
+  display: flex;
+  align-items: center;
+}
+
+.box__pomodoro-active,
+.box__schedule {
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .box {
   @include transition(background-color);
   &__data {
@@ -15,19 +27,11 @@
     padding: 25px;
   }
   &__pomodoro {
-    display: flex;
-    align-items: center;
     justify-content: center;
     grid-column: 1;
-    &-active {
-      flex-direction: column;
-      justify-content: space-between;
-    }
   }
   &__schedule {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     grid-column: 2/3;
     grid-row: 1/3;
   }
@@ -37,6 +41,7 @@
   width: 100%;
   height: 100%;
   &__container {
+    overflow: hidden;
     display: flex;
     height: 420px;
   }
@@ -114,8 +119,6 @@
     line-height: 33px;
   }
   &__count {
-    display: flex;
-    align-items: center;
     height: 100%;
     color: #999999;
     & svg {

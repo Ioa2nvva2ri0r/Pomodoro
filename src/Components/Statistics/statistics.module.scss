@@ -1,3 +1,31 @@
+@import '../../mixin.scss';
+
 .section {
   padding-top: 158px;
+}
+
+.loading,
+.error {
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 270px 0 0 0;
+
+  & svg {
+    @include block-size(40px, 40px);
+    margin-left: 10px;
+  }
+}
+
+.error {
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 270px auto 0 auto;
 }

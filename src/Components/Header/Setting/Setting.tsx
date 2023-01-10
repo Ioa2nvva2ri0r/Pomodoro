@@ -11,11 +11,12 @@ import {
 import { preventDefault } from '../../../Utils/react/preventDefault';
 import { convertInString } from '../../../Utils/js/сonvert';
 import { colorTheme } from '../../../Utils/react/activeColor';
+// Components
+import Icon from '../../Common/Icon/Icon';
 // Static-data
 import { LISTSETTING } from '../../Common/static';
 // Styles-module
 import styles from './setting.module.scss';
-import Icon from '../../Common/Icon/Icon';
 
 export function Setting() {
   // Redux

@@ -9,7 +9,7 @@ import { convertInString } from '../../../../Utils/js/сonvert';
 // Styles-module
 import styles from './buttonscontrol.module.scss';
 // Types
-import { IChangeDataTodo } from '../Timer';
+import type { IChangeDataTodo } from '../Timer';
 interface IButtonsControlProps {
   funChangeTodo: (props: IChangeDataTodo) => void;
   finallyTimePause: number;

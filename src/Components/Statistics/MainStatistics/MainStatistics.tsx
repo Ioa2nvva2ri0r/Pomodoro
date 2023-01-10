@@ -20,13 +20,15 @@ export function MainStatistics({ activeWeek, dataWeek }: IMainStatisticsProps) {
       ? (moment().format('dddd') as TActiveDay)
       : 'Понедельник'
   );
-  const dataDay = dataWeek.filter(
-    (o) => moment(o.dateCreated).format('dddd') === activeDay
-  )[0];
-  const [data, setData] = useState<undefined | IOverallCompletedData>(dataDay);
-
+  const [data, setData] = useState<undefined | IOverallCompletedData>();
+  // React Effect
   useEffect(() => {
-    if (dataWeek.length !== 0) setData(dataDay);
+    if (dataWeek.length !== 0)
+      setData(
+        dataWeek.filter(
+          (o) => moment(o.dateCreated).format('dddd') === activeDay
+        )[0]
+      );
   }, [dataWeek, activeDay, activeWeek]);
 
   return (

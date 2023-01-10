@@ -10,14 +10,14 @@ interface INumberTimerProps {
 }
 
 export function Number({ timer, number }: INumberTimerProps) {
-  const [n, setn] = useState(number);
+  const [value, setValue] = useState(number);
   const [active, setActive] = useState(timer);
   // React Effect
   useEffect(() => {
-    if (timer && n !== number) {
+    if (timer && value !== number) {
       setActive(false);
       setTimeout(() => {
-        setn(number);
+        setValue(number);
         setActive(true);
       }, 600);
     }

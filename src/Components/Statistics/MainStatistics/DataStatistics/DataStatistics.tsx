@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // Redux
 import { useAppSelector } from '../../../../redux/hooks';
-// Moment
-import moment from 'moment';
 // Utils
 import { convertInString, convertTime } from '../../../../Utils/js/сonvert';
 import { colorTheme } from '../../../../Utils/react/activeColor';
@@ -27,7 +25,9 @@ export function DataStatistics({ dataDay }: IDataStatisticsProps) {
   useEffect(() => {
     if (dataDay && dataDay.count.task !== 0) {
       const { time, count } = dataDay;
-      setFocus(Math.round((time.spent * 100) / time.work));
+      const calcFocus = Math.round((time.spent * 100) / time.work);
+
+      setFocus(calcFocus === 0 ? 1 : calcFocus);
       setTimePause(time.break);
       setStops(count.stop);
     } else {

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 // React Context
 import { timerContext } from '../../../context/timerContext';
 // Redux
@@ -28,6 +28,13 @@ export interface IChangeDataTodo {
   count?: { stop?: number; break?: number };
   success?: boolean;
 }
+interface INotifyContent {
+  title: string;
+  options: {
+    body: string;
+    icon: string;
+  };
+}
 
 export function Timer() {
   // React Context
@@ -46,16 +53,10 @@ export function Timer() {
   const { id, name, setTime, passedTime } = todo || {};
   // Notification
   const signal = new Audio(alarm);
-  const notification = (
-    title: string,
-    options: {
-      body: string;
-      icon: string;
-    }
-  ) => {
+  const notification = (content: INotifyContent) => {
     if (notice) {
       if (Notification.permission === 'granted')
-        new Notification(title, options);
+        new Notification(content.title, content.options);
       signal.play();
       setTimeout(() => signal.pause(), 3000);
     }
@@ -66,7 +67,13 @@ export function Timer() {
       (breakShort || (!breakShort && activeAction.PAUSE_BREAK_WORK)
         ? setTime.break.short - pauseShort.value
         : setTime.break.long - pauseLong.value);
+  // React Ref
+  const boxMainRef = useRef<HTMLDivElement>(null);
   // React Effect
+  useEffect(() => {
+    if (todo && todo.success && todos.length === 1)
+      boxMainRef.current?.classList.add(styles['container__main-hidden']);
+  }, [todos, boxMainRef.current]);
   useEffect(() => {
     if (setTime) {
       work.setValue(setTime.work - passedTime.spent);
@@ -80,9 +87,12 @@ export function Timer() {
         action: 'break-success',
         passedTime: { spent: passedTime.spent + (setTime.work - work.value) },
       });
-      notification(`Задание "${name}" выполнено!`, {
-        body: 'Ура! Теперь можно немного отдохнуть!',
-        icon: completed,
+      notification({
+        title: `Задание "${name}" выполнено!`,
+        options: {
+          body: 'Ура! Теперь можно немного отдохнуть!',
+          icon: completed,
+        },
       });
     }
   }, [work.value]);
@@ -98,9 +108,12 @@ export function Timer() {
         },
         ...(activeAction.PAUSE_SUCCESS && { success: true }),
       });
-      notification('Перерыв окончен!', {
-        body: 'Помидорка ждёт вас!',
-        icon: tomato,
+      notification({
+        title: 'Перерыв окончен!',
+        options: {
+          body: 'Помидорка ждёт вас!',
+          icon: tomato,
+        },
       });
     }
   }, [pauseShort.value, pauseLong.value]);
@@ -148,7 +161,7 @@ export function Timer() {
       {todo ? (
         <>
           <HeaderTimer />
-          <div className={styles.container__main}>
+          <div ref={boxMainRef} className={styles.container__main}>
             <div className={styles.box__main}>
               <TimeTimer />
               <BtnAddTime />

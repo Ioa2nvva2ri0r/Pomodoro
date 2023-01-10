@@ -27,10 +27,7 @@ function App() {
   );
 
   useEffect(() => {
-    if (
-      moment().format('YYYY-MM-DD') !== dataCompleted.dateCreated &&
-      dataCompleted.count.task !== 0
-    ) {
+    if (moment().format('YYYY-MM-DD') !== dataCompleted.dateCreated) {
       axios(env.REACT_APP__CASE_REPOSITORY_PATH as string, {
         method: 'POST',
         data: { ...dataCompleted },

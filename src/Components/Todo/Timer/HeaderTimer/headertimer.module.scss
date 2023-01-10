@@ -6,9 +6,12 @@
   justify-content: space-between;
   padding: 20px 40px 18px 40px;
   @include transition(background-color);
-  @include visible-translate-Y(-100px);
+  @include modal-Y(visible, -100px);
   & > * {
     color: #fff;
+  }
+  &__hidden {
+    @include modal-Y(hidden, -100px);
   }
 }
 

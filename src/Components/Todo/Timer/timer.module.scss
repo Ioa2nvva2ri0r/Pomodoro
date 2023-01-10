@@ -10,7 +10,10 @@
     justify-content: center;
     flex-direction: column;
     padding: 74px 0 106px 0;
-    @include visible-translate-Y(300px);
+    @include modal-Y(visible, 300px);
+    &-hidden {
+      @include modal-Y(hidden, 300px);
+    }
   }
 }
 

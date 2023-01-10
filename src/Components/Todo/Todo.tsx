@@ -18,9 +18,7 @@ export function Todo() {
           <CreateTodo />
           <ListTodo />
         </div>
-        <div className={styles.side__right}>
-          <Timer />
-        </div>
+        <div className={styles.side__right} children={<Timer />} />
       </TimerContext>
     </section>
   );

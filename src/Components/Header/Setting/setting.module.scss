@@ -12,11 +12,21 @@
   font-weight: 600;
 }
 
+.form__boxBtn,
+.label,
+.label__box {
+  display: flex;
+}
+
+.form__boxBtn,
+.label,
+.input__checkbox {
+  align-items: center;
+}
+
 .form {
   width: 100%;
   &__boxBtn {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
   }
   &__btn {
@@ -27,12 +37,9 @@
 
 .label {
   position: relative;
-  display: flex;
-  align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 12px;
   &__box {
-    display: flex;
     flex-direction: column;
     cursor: pointer;
     margin-right: 10px;
@@ -85,7 +92,6 @@
   &__checkbox {
     cursor: pointer;
     display: inline-flex;
-    align-items: center;
     justify-content: center;
     border-radius: 5px;
     @include block-size(20px, 20px);

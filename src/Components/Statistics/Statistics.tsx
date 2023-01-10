@@ -5,9 +5,12 @@ import { useAppSelector } from '../../redux/hooks';
 import axios from 'axios';
 // Moment
 import moment from 'moment';
+// Utils
+import { colorTheme } from '../../Utils/react/activeColor';
 // Components
 import { HeaderStatistics } from './HeaderStatistics';
 import { MainStatistics } from './MainStatistics';
+import IconPreloader from '../Common/Icon/IconPreloader';
 // Styles-module
 import styles from './statistics.module.scss';
 // Types
@@ -33,28 +36,44 @@ export function Statistics() {
   // .env
   const env = process.env;
   // Redux
+  const themeLight = useAppSelector((state) => state.setting.theme === 'light');
   const dataNowDay = useAppSelector(
     (state) => state.pomodoro.dataOverallCompleted
   );
   // React State
   const [data, setData] = useState<{} | IDataStatistics>({});
   const [activeWeek, setActiveWeek] = useState<TActiveWeek>('thisWeek');
+  const [loadingData, setLoadingData] = useState(true);
+  const [errGetData, setErrGetData] = useState('');
 
   useEffect(() => {
-    axios(env.REACT_APP__CASE_REPOSITORY_PATH as string).then((res) => {
-      const data = res.data as IOverallCompletedData[];
+    axios(env.REACT_APP__CASE_REPOSITORY_PATH as string)
+      .then((res) => {
+        const data = res.data as IOverallCompletedData[];
 
-      const weeklyActiveData = (startWeek: string, endWeek: string) =>
-        data.filter((o) =>
-          moment(o.dateCreated).isBetween(startWeek, endWeek, undefined, '[)')
-        );
+        const weeklyActiveData = (startWeek: string, endWeek: string) =>
+          data.filter((o) =>
+            moment(o.dateCreated).isBetween(startWeek, endWeek, undefined, '[)')
+          );
 
-      setData({
-        thisWeek: [...weeklyActiveData(dateStartThisWeek, dateNow), dataNowDay],
-        lastWeek: weeklyActiveData(dateStartLastWeek, dateStartThisWeek),
-        twoWeeksAgo: weeklyActiveData(dateStartTwoWeeksAgo, dateStartLastWeek),
-      });
-    });
+        setData({
+          thisWeek: [
+            ...weeklyActiveData(dateStartThisWeek, dateNow),
+            dataNowDay,
+          ],
+          lastWeek: weeklyActiveData(dateStartLastWeek, dateStartThisWeek),
+          twoWeeksAgo: weeklyActiveData(
+            dateStartTwoWeeksAgo,
+            dateStartLastWeek
+          ),
+        });
+      })
+      .catch(() =>
+        setErrGetData(
+          'Ошибка при получении данных! Пожалуста повторите операцию позже...'
+        )
+      )
+      .finally(() => setLoadingData(false));
   }, []);
 
   useEffect(() => {
@@ -68,11 +87,25 @@ export function Statistics() {
 
   return (
     <section className={styles.section}>
-      <HeaderStatistics activeWeek={activeWeek} setActiveWeek={setActiveWeek} />
-      <MainStatistics
-        activeWeek={activeWeek}
-        dataWeek={(data as IDataStatistics)[activeWeek] || []}
-      />
+      {loadingData ? (
+        <p className={styles.loading}>
+          Подождите, идёт загрузка{' '}
+          <IconPreloader stroke={colorTheme(themeLight ? 0 : 100)} />
+        </p>
+      ) : errGetData === '' ? (
+        <>
+          <HeaderStatistics
+            activeWeek={activeWeek}
+            setActiveWeek={setActiveWeek}
+          />
+          <MainStatistics
+            activeWeek={activeWeek}
+            dataWeek={(data as IDataStatistics)[activeWeek] || []}
+          />
+        </>
+      ) : (
+        <p className={styles.error}>{errGetData}</p>
+      )}
     </section>
   );
 }

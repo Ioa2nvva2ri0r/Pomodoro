@@ -37,6 +37,10 @@ export function DataSchedule({
   // React Ref
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const chekDataDay = dataDay && dataDay.count.task !== 0;
+  const lastSymbolTask = () =>
+    Number((dataDay?.count.task || 0).toString().slice(-1));
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -94,7 +98,7 @@ export function DataSchedule({
       >
         <h2 className={styles.data__title}>{capitalizedString(activeDay)}</h2>
         <p className={styles.data__desc}>
-          {dataDay && dataDay.count.task !== 0 ? (
+          {chekDataDay ? (
             <>
               Вы работали над задачами в течении{' '}
               <span className={styles['data__desc-alert']}>
@@ -110,19 +114,26 @@ export function DataSchedule({
         className={convertInString(
           styles.box,
           styles.box__pomodoro,
-          dataDay && dataDay.count.task !== 0 && styles['box__pomodoro-active']
+          chekDataDay && styles['box__pomodoro-active']
         )}
         style={{
           backgroundColor: colorTheme(themeLight ? 96 : 30),
         }}
       >
-        {dataDay && dataDay.count.task !== 0 ? (
+        {chekDataDay ? (
           <>
             <strong className={styles.pomodoro__count}>
               <IconLogo /> x {dataDay.count.task}
             </strong>
             <strong className={styles.pomodoro__text}>
-              {dataDay.count.task} помидора
+              {dataDay.count.task} помидор
+              {lastSymbolTask() === 0 ||
+              lastSymbolTask() >= 5 ||
+              (dataDay.count.task >= 10 && dataDay.count.task <= 20)
+                ? 'ов'
+                : lastSymbolTask() >= 2 && lastSymbolTask() <= 4
+                ? 'а'
+                : ''}
             </strong>
           </>
         ) : (
@@ -136,7 +147,9 @@ export function DataSchedule({
         }}
       >
         <div className={styles.schedule__container}>
-          <canvas ref={canvasRef} className={styles.schedule}></canvas>
+          <canvas ref={canvasRef} className={styles.schedule}>
+            Ваш браузер не поддерживает отрисовку статистики!
+          </canvas>
           <ul className={styles['schedule__list-times']}>
             {['1 ч 40 мин', '1 ч 15 мин', '50 мин', '25 мин'].map((el, i) => (
               <li

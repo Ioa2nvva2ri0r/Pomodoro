@@ -16,11 +16,9 @@
   &:disabled {
     cursor: default;
     opacity: 0.5;
-    & svg {
+    & svg,
+    & svg circle {
       fill: inherit;
-      & circle {
-        fill: inherit;
-      }
     }
     &:hover {
       & + .main__desc {
@@ -36,8 +34,8 @@
     transform: translateY(-50%);
   }
   &__desc {
-    display: block;
     position: absolute;
+    display: block;
     text-align: center;
     top: 60px;
     left: 50%;

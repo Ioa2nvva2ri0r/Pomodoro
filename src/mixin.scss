@@ -13,15 +13,15 @@
   );
 }
 
-@mixin visible-translate-Y($value-Y) {
+@mixin modal-Y($action, $offset: 100px) {
   @include animation(
     (
-      opacity: 0,
-      transform: translateY($value-Y),
+      opacity: if($action == visible, 0, 1),
+      transform: if($action == visible, translateY($offset), translateY(0)),
     ),
     (
-      opacity: 1,
-      transform: translateY(0),
+      opacity: if($action == hidden, 0, 1),
+      transform: if($action == hidden, translateY($offset), translateY(0)),
     )
   );
 }
