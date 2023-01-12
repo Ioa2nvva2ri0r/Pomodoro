@@ -23,9 +23,9 @@ import alarm from '../../../assets/audio/alarm.mp3';
 // Types
 export interface IChangeDataTodo {
   action: TActionTimer;
-  setTime?: { work?: number; break?: { short: number; long: number } };
-  passedTime?: { spent?: number; break?: number };
-  count?: { stop?: number; break?: number };
+  setTime?: { work?: number; pause?: { short: number; long: number } };
+  passedTime?: { spent?: number; pause?: number };
+  count?: { stop?: number; pause?: number };
   success?: boolean;
 }
 interface INotifyContent {
@@ -50,7 +50,7 @@ export function Timer() {
   const { theme, notice } = useAppSelector((state) => state.setting);
   const todos = useAppSelector((state) => state.pomodoro.data);
   const todo = todos[0];
-  const { id, name, setTime, passedTime } = todo || {};
+  const { id, name, setTime, passedTime, count } = todo || {};
   // Notification
   const signal = new Audio(alarm);
   const notification = (content: INotifyContent) => {
@@ -63,29 +63,30 @@ export function Timer() {
   };
   const finallyTimePause =
     passedTime &&
-    passedTime.break +
-      (breakShort || (!breakShort && activeAction.PAUSE_BREAK_WORK)
-        ? setTime.break.short - pauseShort.value
-        : setTime.break.long - pauseLong.value);
+    passedTime.pause +
+      (breakShort
+        ? setTime.pause.short - pauseShort.value
+        : setTime.pause.long - pauseLong.value);
   // React Ref
   const boxMainRef = useRef<HTMLDivElement>(null);
   // React Effect
   useEffect(() => {
-    if (todo && todo.success && todos.length === 1)
+    if (todo && todo.success && todos[0].pomodoro === 1 && todos.length === 1)
       boxMainRef.current?.classList.add(styles['container__main-hidden']);
   }, [todos, boxMainRef.current]);
   useEffect(() => {
     if (setTime) {
       work.setValue(setTime.work - passedTime.spent);
-      pauseShort.setValue(setTime.break.short);
-      pauseLong.setValue(setTime.break.long);
+      pauseShort.setValue(setTime.pause.short);
+      pauseLong.setValue(setTime.pause.long);
     }
   }, [setTime]);
   useEffect(() => {
     if (activeAction.START && work.value <= 0) {
       changeTodo({
-        action: 'break-success',
+        action: 'break',
         passedTime: { spent: passedTime.spent + (setTime.work - work.value) },
+        count: { pause: count.pause + 1 },
       });
       notification({
         title: `Задание "${name}" выполнено!`,
@@ -97,16 +98,13 @@ export function Timer() {
     }
   }, [work.value]);
   useEffect(() => {
-    if (
-      activeAction.PAUSE_ALL &&
-      (pauseShort.value <= 0 || pauseLong.value <= 0)
-    ) {
+    if (activeAction.BREAK && (pauseShort.value <= 0 || pauseLong.value <= 0)) {
       changeTodo({
-        action: activeAction.PAUSE_WORK ? 'next' : 'nothing',
+        action: 'nothing',
         passedTime: {
-          break: finallyTimePause,
+          pause: finallyTimePause,
         },
-        ...(activeAction.PAUSE_SUCCESS && { success: true }),
+        success: true,
       });
       notification({
         title: 'Перерыв окончен!',
@@ -126,11 +124,11 @@ export function Timer() {
       Notification.requestPermission();
 
     // Setting the initial action
-    if (activeAction.START) changeTodo({ action: 'next' });
-    else if (activeAction.PAUSE_ALL)
+    if (activeAction.START) changeTodo({ action: 'work-stop' });
+    else if (activeAction.BREAK)
       changeTodo({
-        action: activeAction.PAUSE_WORK ? 'break-work' : 'break-success',
-        setTime: Object.assign({}, { break: setTime.break }),
+        action: 'break-stop',
+        setTime: { pause: setTime.pause },
       });
   }, []);
   // Auxiliary utilities

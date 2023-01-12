@@ -23,20 +23,16 @@ import { LISTCONTROL } from '../../../Common/static';
 // Style-module
 import styles from './itemtodo.module.scss';
 // Types
-import type { IControlsData } from '../../../../redux/slices/types/typesDataPomodoro';
-interface IItemTodoProps extends IControlsData {
-  action: TActionTimer;
-  id: string;
-}
+import type { ITodo } from '../../../../redux/slices/types/typesDataPomodoro';
 interface IChangeDataTodo {
   name?: string;
-  setTime?: { work?: number };
+  pomodoro?: number;
 }
 
-export function ItemTodo(prop: IItemTodoProps) {
-  const { id, name, setTime } = prop;
+export function ItemTodo(prop: ITodo) {
+  const { id, name, pomodoro } = prop;
   // React Context
-  const { action, breakShort, disabled } = useContext(timerContext);
+  const { action } = useContext(timerContext);
   const activeAction = action.active;
   // Redux
   const dispatch = useAppDispatch();
@@ -44,7 +40,7 @@ export function ItemTodo(prop: IItemTodoProps) {
   const todos = useAppSelector((state) => state.pomodoro.data);
   const changeTodo = (
     method: TMethod,
-    { name, setTime }: IChangeDataTodo = {}
+    { name, pomodoro }: IChangeDataTodo = {}
   ) =>
     dispatch(
       setTodo({
@@ -52,7 +48,7 @@ export function ItemTodo(prop: IItemTodoProps) {
         data: {
           id,
           name,
-          setTime: Object.assign({}, prop.setTime, setTime),
+          pomodoro,
         },
       })
     );
@@ -74,7 +70,7 @@ export function ItemTodo(prop: IItemTodoProps) {
   useEffect(() => inputEditRef.current?.focus(), [edit, inputEditRef.current]);
   useEffect(() => {
     const todoSuccess = todos.filter(({ success }) => success === true)[0];
-    if (todoSuccess && todoSuccess.id === id)
+    if (todoSuccess && todoSuccess.id === id && todoSuccess.pomodoro === 1)
       itemRef.current?.classList.add(styles.item__hidden);
   }, [todos, itemRef.current]);
   // Castom Hook
@@ -85,33 +81,7 @@ export function ItemTodo(prop: IItemTodoProps) {
   const handleClickControl = (btnAction: TActionControls) =>
     btnAction === 'increase' || btnAction === 'decrease'
       ? changeTodo('PATCH', {
-          setTime: {
-            ...(activeAction.STOP_ALL && {
-              work:
-                btnAction === 'increase'
-                  ? setTime.work + 60
-                  : setTime.work - 60,
-            }),
-            ...(activeAction.BREAK_ALL && {
-              break: {
-                ...(breakShort || (!breakShort && activeAction.BREAK_WORK)
-                  ? {
-                      short:
-                        btnAction === 'increase'
-                          ? setTime.break.short + 60
-                          : setTime.break.short - 60,
-                      long: setTime.break.long,
-                    }
-                  : {
-                      short: setTime.break.short,
-                      long:
-                        btnAction === 'increase'
-                          ? setTime.break.long + 60
-                          : setTime.break.long - 60,
-                    }),
-              },
-            }),
-          },
+          pomodoro: btnAction === 'increase' ? pomodoro + 1 : pomodoro - 1,
         })
       : btnAction === 'edit'
       ? setEdit(true)
@@ -146,6 +116,11 @@ export function ItemTodo(prop: IItemTodoProps) {
         key={id}
         className={convertInString(styles.item, styles.item__hidden)}
       >
+        <span
+          className={styles.item__pomodoro}
+          role="note"
+          children={pomodoro}
+        />
         <div className={styles.item__box}>
           {edit ? (
             <div className={styles.input__box}>
@@ -169,7 +144,8 @@ export function ItemTodo(prop: IItemTodoProps) {
             children={error}
           />
         </div>
-        {prop.action === 'break-success' ? (
+        {(prop.action === 'break' || prop.action === 'break-stop') &&
+        pomodoro === 1 ? (
           <div
             className={styles.completed__icon}
             children={<IconCompleted />}
@@ -199,9 +175,12 @@ export function ItemTodo(prop: IItemTodoProps) {
                       children={props.children}
                       {...(props.action !== 'delete' && {
                         disabled:
-                          activeAction.PAUSE_ALL_START ||
-                          (props.action === 'increase' && disabled.increase) ||
-                          (props.action === 'decrease' && disabled.decrease),
+                          (props.action === 'increase' && pomodoro === 5) ||
+                          (props.action === 'decrease' && pomodoro === 1) ||
+                          (activeAction.START &&
+                            (props.action === 'increase' ||
+                              props.action === 'decrease' ||
+                              props.action === 'edit')),
                       })}
                     />
                   </li>

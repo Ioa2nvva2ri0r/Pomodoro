@@ -19,7 +19,9 @@ export function ListTodo() {
   const completedTodos = useAppSelector(
     (state) => state.pomodoro.dataCompleted
   );
-  const allTime = todos.map((o) => o.setTime.work - o.passedTime.spent);
+  const allTime = todos.map(
+    (o) => o.setTime.work * o.pomodoro - o.passedTime.spent
+  );
   // React State
   const [length, setLength] = useState(todos.length);
   // React Ref
@@ -30,12 +32,23 @@ export function ListTodo() {
     const todoSuccess = todos.filter(({ success }) => success === true)[0];
 
     if (todoSuccess) {
-      time?.classList.add(styles.time__hidden);
-      dispatch(setAddTodoCompleted(todoSuccess));
-      setTimeout(() => {
-        time?.classList.remove(styles.time__hidden);
+      dispatch(setAddTodoCompleted({ ...todoSuccess, pomodoro: 1 }));
+
+      if (todoSuccess.pomodoro === 1) {
+        time?.classList.add(styles.time__hidden);
+        setTimeout(() => {
+          time?.classList.remove(styles.time__hidden);
+          dispatch(setTodo({ method: 'DELETE', data: { id: todoSuccess.id } }));
+        }, 400);
+      } else {
+        dispatch(
+          setTodo({
+            method: 'POST',
+            data: { ...todoSuccess, pomodoro: todoSuccess.pomodoro - 1 },
+          })
+        );
         dispatch(setTodo({ method: 'DELETE', data: { id: todoSuccess.id } }));
-      }, 400);
+      }
     }
   }, [todos, timeRef.current]);
   useEffect(() => {
@@ -46,7 +59,7 @@ export function ListTodo() {
         dispatch(
           setTodo({
             method: 'PATCH',
-            data: { id, task: completedTodos.length + i + 1 },
+            data: { id, task: (completedTodos.at(-1)?.task || 0) + i + 1 },
           })
         )
       );

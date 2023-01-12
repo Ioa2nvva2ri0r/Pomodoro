@@ -35,19 +35,19 @@ export const LISTSETTING = Object.entries({
     type: 'number',
     desc: 'Продолжительность "Помидора"',
   },
-  breakShort: {
+  pauseShort: {
     min: 3,
     max: 15,
     type: 'number',
     desc: 'Продолжительность короткого перерыва',
   },
-  breakLong: {
+  pauseLong: {
     min: 15,
     max: 30,
     type: 'number',
     desc: 'Продолжительность длинного перерыва',
   },
-  breakFrequency: {
+  pauseFrequency: {
     min: 2,
     max: 10,
     type: 'number',

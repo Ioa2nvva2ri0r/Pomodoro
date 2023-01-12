@@ -4,23 +4,17 @@ import { useAppSelector } from '../redux/hooks';
 // Types
 type TKeyAction =
   | 'NOTHING'
-  | 'STOP'
   | 'START'
-  | 'NEXT'
-  | 'PAUSE_WORK'
-  | 'PAUSE_SUCCESS'
-  | 'BREAK_WORK'
-  | 'BREAK_SUCCESS'
-  | 'START_NEXT'
+  | 'BREAK'
+  | 'WORK_STOP'
+  | 'BREAK_STOP'
+  | 'START__BREAK'
+  | 'START__WORK_STOP'
   | 'STOP_ALL'
-  | 'PAUSE_ALL_START'
-  | 'BREAK_ALL_START'
-  | 'BREAK_ALL_NEXT'
-  | 'PAUSE_ALL'
   | 'BREAK_ALL'
-  | 'PAUSE_BREAK_WORK'
-  | 'PAUSE_BREAK_SUCCESS'
-  | 'PAUSE_BREAK_ALL';
+  | 'NOTHING__WORK_STOP'
+  | 'WORK_STOP__BREAK_ALL'
+  | 'INACTION';
 interface IValueTime {
   value: number;
   setValue: React.Dispatch<React.SetStateAction<number>>;
@@ -43,7 +37,7 @@ interface ITimerDataContext {
   };
   disabled: {
     increase: boolean;
-    decrease: boolean;
+    // decrease: boolean;
   };
 }
 
@@ -60,16 +54,19 @@ export const timerContext = React.createContext<ITimerDataContext>({
   action: { value: 'nothing', active: {}, funActive: () => false },
   disabled: {
     increase: false,
-    decrease: false,
+    // decrease: false,
   },
 });
 
 export function TimerContext({ children }: { children: React.ReactNode }) {
   // Redux
-  const { breakFrequency } = useAppSelector((state) => state.setting || {});
-  const { action, task, setTime } = useAppSelector(
+  const { pauseFrequency } = useAppSelector((state) => state.setting || {});
+  const { action, setTime } = useAppSelector(
     (state) => state.pomodoro.data[0] || {}
   );
+  const {
+    count: { pomodoro },
+  } = useAppSelector((state) => state.pomodoro.dataOverallCompleted);
   // React State
   const [timerId, setTimerId] = useState(0);
   const [workTime, setWorkTime] = useState(1);
@@ -81,31 +78,20 @@ export function TimerContext({ children }: { children: React.ReactNode }) {
 
   const activeAction = {
     NOTHING: coincidence('nothing'),
-    STOP: coincidence('stop'),
     START: coincidence('start'),
-    NEXT: coincidence('next'),
-    PAUSE_WORK: coincidence('pause-work'),
-    PAUSE_SUCCESS: coincidence('pause-success'),
-    BREAK_WORK: coincidence('break-work'),
-    BREAK_SUCCESS: coincidence('break-success'),
+    BREAK: coincidence('break'),
+    WORK_STOP: coincidence('work-stop'),
+    BREAK_STOP: coincidence('break-stop'),
     // Combinations
-    START_NEXT: coincidence('start', 'next'),
-    STOP_ALL: coincidence('nothing', 'next', 'stop'),
-    PAUSE_ALL_START: coincidence('pause-work', 'pause-success', 'start'),
-    BREAK_ALL_START: coincidence('break-work', 'break-success', 'start'),
-    BREAK_ALL_NEXT: coincidence('break-work', 'break-success', 'next'),
-    PAUSE_ALL: coincidence('pause-work', 'pause-success'),
-    BREAK_ALL: coincidence('break-work', 'break-success'),
-    PAUSE_BREAK_WORK: coincidence('pause-work', 'break-work'),
-    PAUSE_BREAK_SUCCESS: coincidence('pause-success', 'break-success'),
-    PAUSE_BREAK_ALL: coincidence(
-      'pause-work',
-      'break-work',
-      'pause-success',
-      'break-success'
-    ),
+    START__BREAK: coincidence('start', 'break'),
+    START__WORK_STOP: coincidence('start', 'work-stop'),
+    STOP_ALL: coincidence('work-stop', 'break-stop'),
+    BREAK_ALL: coincidence('break', 'break-stop'),
+    NOTHING__WORK_STOP: coincidence('nothing', 'work-stop'),
+    WORK_STOP__BREAK_ALL: coincidence('work-stop', 'break', 'break-stop'),
+    INACTION: coincidence('nothing', 'work-stop', 'break-stop'),
   };
-  const breakShort = task % breakFrequency !== 0;
+  const breakShort = (pomodoro + 1) % pauseFrequency !== 0;
 
   return (
     <timerContext.Provider
@@ -120,19 +106,18 @@ export function TimerContext({ children }: { children: React.ReactNode }) {
         action: { value: action, active: activeAction, funActive: coincidence },
         disabled: {
           increase:
-            (activeAction.STOP_ALL && setTime.work >= 3541) ||
-            (activeAction.BREAK_WORK && setTime.break.short >= 841) ||
-            (activeAction.BREAK_SUCCESS &&
+            (activeAction.NOTHING__WORK_STOP && setTime.work >= 3541) ||
+            (activeAction.BREAK_STOP &&
               (breakShort
-                ? setTime.break.short >= 841
-                : setTime.break.long >= 1741)),
-          decrease:
-            (activeAction.STOP_ALL && setTime.work <= 1200) ||
-            (activeAction.BREAK_WORK && setTime.break.short <= 180) ||
-            (activeAction.BREAK_SUCCESS &&
-              (breakShort
-                ? setTime.break.short <= 180
-                : setTime.break.long <= 900)),
+                ? setTime.pause.short >= 841
+                : setTime.pause.long >= 1741)),
+          // decrease:
+          //   (activeAction.STOP_ALL && setTime.work <= 1200) ||
+          //   (activeAction.PAUSE_WORK && setTime.pause.short <= 180) ||
+          //   (activeAction.PAUSE_SUCCESS &&
+          //     (breakShort
+          //       ? setTime.pause.short <= 180
+          //       : setTime.pause.long <= 900)),
         },
       }}
     >

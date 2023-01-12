@@ -6,8 +6,8 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface ISettingСonfig {
   notice: boolean;
-  breakFrequency: number;
-  initData: { work: number; break: { short: number; long: number } };
+  pauseFrequency: number;
+  initData: { work: number; pause: { short: number; long: number } };
 }
 export interface ISettingData extends ISettingСonfig {
   id: 'setting';
@@ -17,8 +17,8 @@ export interface ISettingData extends ISettingСonfig {
 export const keySetting = 'pomodoro-setting';
 export const defaultSetting: ISettingСonfig = {
   notice: true,
-  breakFrequency: 4,
-  initData: { work: 1500, break: { short: 300, long: 900 } },
+  pauseFrequency: 4,
+  initData: { work: 1500, pause: { short: 300, long: 900 } },
 };
 
 const setting = (
@@ -53,16 +53,16 @@ export const settingPomodoroSlice = createSlice({
       state.theme = theme;
     },
     setSetting: (state, action: PayloadAction<ISettingСonfig>) => {
-      const { notice, breakFrequency, initData } = action.payload;
+      const { notice, pauseFrequency, initData } = action.payload;
 
       dataStorage({
         key: keySetting,
         method: 'PATCH',
-        data: { id: setting.id, breakFrequency, notice, initData },
+        data: { id: setting.id, pauseFrequency, notice, initData },
       });
 
       state.notice = notice;
-      state.breakFrequency = breakFrequency;
+      state.pauseFrequency = pauseFrequency;
       state.initData = initData;
     },
   },

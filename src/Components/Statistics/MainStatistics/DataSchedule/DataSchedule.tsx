@@ -37,9 +37,9 @@ export function DataSchedule({
   // React Ref
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const chekDataDay = dataDay && dataDay.count.task !== 0;
+  const chekDataDay = dataDay && dataDay.count.pomodoro !== 0;
   const lastSymbolTask = () =>
-    Number((dataDay?.count.task || 0).toString().slice(-1));
+    Number((dataDay?.count.pomodoro || 0).toString().slice(-1));
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -76,7 +76,7 @@ export function DataSchedule({
             const y = canvas.height - columnHeigth;
 
             ctxSchedule.fillStyle =
-              !obj || (obj && obj.count.task === 0)
+              !obj || (obj && obj.count.pomodoro === 0)
                 ? '#C4C4C4'
                 : obj && moment(obj.dateCreated).format('dddd') === activeDay
                 ? '#DC3E22'
@@ -123,13 +123,13 @@ export function DataSchedule({
         {chekDataDay ? (
           <>
             <strong className={styles.pomodoro__count}>
-              <IconLogo /> x {dataDay.count.task}
+              <IconLogo /> x {dataDay.count.pomodoro}
             </strong>
             <strong className={styles.pomodoro__text}>
-              {dataDay.count.task} помидор
+              {dataDay.count.pomodoro} помидор
               {lastSymbolTask() === 0 ||
               lastSymbolTask() >= 5 ||
-              (dataDay.count.task >= 10 && dataDay.count.task <= 20)
+              (dataDay.count.pomodoro >= 10 && dataDay.count.pomodoro <= 20)
                 ? 'ов'
                 : lastSymbolTask() >= 2 && lastSymbolTask() <= 4
                 ? 'а'

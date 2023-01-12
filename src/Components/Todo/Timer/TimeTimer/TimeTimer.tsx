@@ -20,8 +20,8 @@ export function TimeTimer() {
   } = useContext(timerContext);
   const activeAction = action.active;
   const stopTimer = timer.id !== 0;
-  const time = activeAction.PAUSE_BREAK_ALL
-    ? breakShort || (!breakShort && activeAction.PAUSE_BREAK_WORK)
+  const time = activeAction.BREAK_ALL
+    ? breakShort
       ? pauseShort.value
       : pauseLong.value
     : work.value;
@@ -38,7 +38,7 @@ export function TimeTimer() {
       style={{
         color: activeColor(
           activeAction.START,
-          activeAction.PAUSE_ALL,
+          activeAction.BREAK_ALL,
           colorTheme(themeLight ? 20 : 80)
         ),
       }}

@@ -28,19 +28,19 @@ export function BtnAddTime() {
           id,
           setTime: {
             ...setTime,
-            ...(activeAction.STOP_ALL && {
+            ...(activeAction.NOTHING__WORK_STOP && {
               work: setTime.work + 60,
             }),
-            ...(activeAction.BREAK_ALL && {
-              break: {
-                ...(breakShort || (!breakShort && activeAction.BREAK_WORK)
+            ...(activeAction.BREAK_STOP && {
+              pause: {
+                ...(breakShort
                   ? {
-                      short: setTime.break.short + 60,
-                      long: setTime.break.long,
+                      short: setTime.pause.short + 60,
+                      long: setTime.pause.long,
                     }
                   : {
-                      short: setTime.break.short,
-                      long: setTime.break.long + 60,
+                      short: setTime.pause.short,
+                      long: setTime.pause.long + 60,
                     }),
               },
             }),
@@ -55,7 +55,7 @@ export function BtnAddTime() {
       <button
         className={styles.main}
         style={{ fill: colorTheme(themeLight ? 77 : 17) }}
-        disabled={activeAction.PAUSE_ALL_START || disabled.increase}
+        disabled={activeAction.START__BREAK || disabled.increase}
         onClick={handleAddTime}
         aria-label="Довавить минуту"
         children={
@@ -66,13 +66,13 @@ export function BtnAddTime() {
           />
         }
       />
-      {(activeAction.PAUSE_ALL_START || disabled.increase) && (
+      {(activeAction.START__BREAK || disabled.increase) && (
         <p
           className={styles.main__desc}
           style={{ backgroundColor: colorTheme(themeLight ? 90 : 17) }}
           role="alert"
         >
-          {activeAction.PAUSE_ALL_START
+          {activeAction.START__BREAK
             ? 'Добавить минуту к таймеру можно только при его остановке!'
             : disabled.increase && 'Достигнуто максимальное значение таймера!'}
         </p>

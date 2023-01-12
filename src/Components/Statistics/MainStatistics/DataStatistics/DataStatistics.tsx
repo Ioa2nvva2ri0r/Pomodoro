@@ -23,12 +23,12 @@ export function DataStatistics({ dataDay }: IDataStatisticsProps) {
   const [stops, setStops] = useState(0);
 
   useEffect(() => {
-    if (dataDay && dataDay.count.task !== 0) {
+    if (dataDay && dataDay.count.pomodoro !== 0) {
       const { time, count } = dataDay;
       const calcFocus = Math.round((time.spent * 100) / time.work);
 
       setFocus(calcFocus === 0 ? 1 : calcFocus);
-      setTimePause(time.break);
+      setTimePause(time.pause);
       setStops(count.stop);
     } else {
       setFocus(0);

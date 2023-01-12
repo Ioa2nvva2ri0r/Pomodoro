@@ -22,7 +22,7 @@ export function Setting() {
   // Redux
   const dispatch = useAppDispatch();
   const setting = useAppSelector((state) => state.setting);
-  const { theme, notice, breakFrequency, initData } = setting;
+  const { theme, notice, pauseFrequency, initData } = setting;
   const themeLight = theme === 'light';
   const todos = useAppSelector((state) => state.pomodoro.data);
   // Time conversion
@@ -30,22 +30,22 @@ export function Setting() {
   const second = (minut: number) => minut * 60;
   // React State
   const [workTime, setWorkTime] = useState(minut(initData.work));
-  const [breakShortTime, setBreakShortTime] = useState(
-    minut(initData.break.short)
+  const [pauseShortTime, setPauseShortTime] = useState(
+    minut(initData.pause.short)
   );
-  const [breakLongTime, setBreakLongTime] = useState(
-    minut(initData.break.long)
+  const [pauseLongTime, setPauseLongTime] = useState(
+    minut(initData.pause.long)
   );
-  const [countBreakFrequency, setCountBreakFrequency] =
-    useState(breakFrequency);
+  const [countPauseFrequency, setCountPauseFrequency] =
+    useState(pauseFrequency);
   const [enableNotice, setEnableNotice] = useState(notice);
 
   const valueComparison = (comparedArray: any[]): boolean =>
     JSON.stringify([
       second(workTime),
-      second(breakShortTime),
-      second(breakLongTime),
-      countBreakFrequency,
+      second(pauseShortTime),
+      second(pauseLongTime),
+      countPauseFrequency,
       enableNotice,
     ]) === JSON.stringify(comparedArray);
 
@@ -54,29 +54,29 @@ export function Setting() {
     // @ts-ignore
     if (e.nativeEvent.submitter.id === 'save')
       data = {
-        breakFrequency: Number(countBreakFrequency),
+        pauseFrequency: Number(countPauseFrequency),
         notice: enableNotice,
         initData: {
           work: second(workTime),
-          break: {
-            short: second(breakShortTime),
-            long: second(breakLongTime),
+          pause: {
+            short: second(pauseShortTime),
+            long: second(pauseLongTime),
           },
         },
       };
 
     setWorkTime(minut(data.initData.work));
-    setBreakShortTime(minut(data.initData.break.short));
-    setBreakLongTime(minut(data.initData.break.long));
-    setCountBreakFrequency(data.breakFrequency);
+    setPauseShortTime(minut(data.initData.pause.short));
+    setPauseLongTime(minut(data.initData.pause.long));
+    setCountPauseFrequency(data.pauseFrequency);
     setEnableNotice(data.notice);
 
     todos.forEach(({ id, setTime }) => {
       const timeWork = setTime.work - initData.work + data.initData.work;
-      const timeBreakShort =
-        setTime.break.short - initData.break.short + data.initData.break.short;
-      const timeBreakLong =
-        setTime.break.long - initData.break.long + data.initData.break.long;
+      const timepauseShort =
+        setTime.pause.short - initData.pause.short + data.initData.pause.short;
+      const timepauseLong =
+        setTime.pause.long - initData.pause.long + data.initData.pause.long;
 
       dispatch(
         setTodo({
@@ -85,9 +85,9 @@ export function Setting() {
             id,
             setTime: {
               work: timeWork <= 3600 ? timeWork : 3600,
-              break: {
-                short: timeBreakShort <= 900 ? timeBreakShort : 900,
-                long: timeBreakLong <= 1800 ? timeBreakLong : 1800,
+              pause: {
+                short: timepauseShort <= 900 ? timepauseShort : 900,
+                long: timepauseLong <= 1800 ? timepauseLong : 1800,
               },
             },
           },
@@ -119,23 +119,23 @@ export function Setting() {
                 value:
                   props.name === 'work'
                     ? workTime
-                    : props.name === 'breakShort'
-                    ? breakShortTime
-                    : props.name === 'breakLong'
-                    ? breakLongTime
-                    : props.name === 'breakFrequency'
-                    ? countBreakFrequency
+                    : props.name === 'pauseShort'
+                    ? pauseShortTime
+                    : props.name === 'pauseLong'
+                    ? pauseLongTime
+                    : props.name === 'pauseFrequency'
+                    ? countPauseFrequency
                     : '',
                 onChange: (e) => {
                   const value = Number(e.currentTarget.value);
                   props.name === 'work'
                     ? setWorkTime(value)
-                    : props.name === 'breakShort'
-                    ? setBreakShortTime(value)
-                    : props.name === 'breakLong'
-                    ? setBreakLongTime(value)
-                    : props.name === 'breakFrequency' &&
-                      setCountBreakFrequency(value);
+                    : props.name === 'pauseShort'
+                    ? setPauseShortTime(value)
+                    : props.name === 'pauseLong'
+                    ? setPauseLongTime(value)
+                    : props.name === 'pauseFrequency' &&
+                      setCountPauseFrequency(value);
                 },
                 onBlur: (e) => {
                   const value = Number(e.currentTarget.value);
@@ -143,12 +143,12 @@ export function Setting() {
                     value >= max ? max : value <= min ? min : value;
                   props.name === 'work'
                     ? setWorkTime(finallyValue)
-                    : props.name === 'breakShort'
-                    ? setBreakShortTime(finallyValue)
-                    : props.name === 'breakLong'
-                    ? setBreakLongTime(finallyValue)
-                    : props.name === 'breakFrequency' &&
-                      setCountBreakFrequency(finallyValue);
+                    : props.name === 'pauseShort'
+                    ? setPauseShortTime(finallyValue)
+                    : props.name === 'pauseLong'
+                    ? setPauseLongTime(finallyValue)
+                    : props.name === 'pauseFrequency' &&
+                      setCountPauseFrequency(finallyValue);
                 },
               })}
               {...(props.name === 'notice' && {
@@ -179,9 +179,9 @@ export function Setting() {
               children: 'Сохранить',
               disabled: valueComparison([
                 initData.work,
-                initData.break.short,
-                initData.break.long,
-                breakFrequency,
+                initData.pause.short,
+                initData.pause.long,
+                pauseFrequency,
                 notice,
               ]),
             },
@@ -190,9 +190,9 @@ export function Setting() {
               children: 'По умолчанию',
               disabled: valueComparison([
                 defaultSetting.initData.work,
-                defaultSetting.initData.break.short,
-                defaultSetting.initData.break.long,
-                defaultSetting.breakFrequency,
+                defaultSetting.initData.pause.short,
+                defaultSetting.initData.pause.long,
+                defaultSetting.pauseFrequency,
                 defaultSetting.notice,
               ]),
             },

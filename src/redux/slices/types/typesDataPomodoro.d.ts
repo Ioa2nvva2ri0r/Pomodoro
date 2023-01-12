@@ -2,19 +2,20 @@ export interface IControlsData {
   name: string;
   setTime: {
     work: number;
-    break: { short: number; long: number };
+    pause: { short: number; long: number };
   };
 }
 export interface ITodoCountAndPassedTime {
   id: string;
   task: number;
+  pomodoro: number;
   passedTime: {
     spent: number;
-    break: number;
+    pause: number;
   };
   count: {
     stop: number;
-    break: number;
+    pause: number;
   };
 }
 export interface IOverallCompletedData {
@@ -23,12 +24,12 @@ export interface IOverallCompletedData {
   time: {
     work: number;
     spent: number;
-    break: number;
+    pause: number;
   };
   count: {
-    task: number;
+    pomodoro: number;
     stop: number;
-    break: number;
+    pause: number;
   };
 }
 export interface ITodoCompleted extends ITodoCountAndPassedTime {

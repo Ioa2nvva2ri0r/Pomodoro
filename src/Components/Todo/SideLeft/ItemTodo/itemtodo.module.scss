@@ -16,13 +16,11 @@
   &:first-child {
     border-width: 1px 0 1px 0;
   }
-  &::before {
+  &__pomodoro {
     position: absolute;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    content: counter(ol-list);
-    counter-increment: ol-list;
     top: 50%;
     left: 0;
     @include block-size(23px, 23px);

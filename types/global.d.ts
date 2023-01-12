@@ -13,9 +13,9 @@ type TSize =
 
 type TSetting =
   | 'work'
-  | 'breakShort'
-  | 'breakLong'
-  | 'breakFrequency'
+  | 'pauseShort'
+  | 'pauseLong'
+  | 'pauseFrequency'
   | 'notice';
 
 type TActionControls = 'increase' | 'decrease' | 'edit' | 'delete';
@@ -45,12 +45,4 @@ type TActiveDay =
   | 'Суббота'
   | 'Воскресенье';
 
-type TActionTimer =
-  | 'nothing'
-  | 'start'
-  | 'stop'
-  | 'next'
-  | 'pause-work'
-  | 'break-work'
-  | 'pause-success'
-  | 'break-success';
+type TActionTimer = 'nothing' | 'start' | 'break' | 'work-stop' | 'break-stop';
